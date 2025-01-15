@@ -28,7 +28,7 @@ function fetchData() {
     let completed = 0;
 
     walletAddresses.forEach(walletAddress => {
-        const url = `https://jup-allocation-proxy.onrender.com/api/allocation?wallet=${walletAddress}`;
+        const url = `https://legendary-space-yodel-wj57j6q9q94c574x-80.app.github.dev//api/allocation?wallet=${walletAddress}`;
 
         fetch(url)
             .then(response => response.json())
