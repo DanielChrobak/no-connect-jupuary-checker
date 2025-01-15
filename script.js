@@ -1,8 +1,10 @@
 function formatNumber(num) {
-    if (num == null) return 0;
-    if (num >= 1000000) return (num / 1000000) + 'M';
-    if (num >= 1000) return (num / 1000) + 'K';
-    return num;
+    if (num == null) return '0';
+    const formatted = num.toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    });
+    return formatted.endsWith('.00') ? formatted.slice(0, -3) : formatted;
 }
 
 function createTierRow(tier, score, allocation, currentTier) {
