@@ -1,5 +1,5 @@
 function formatNumber(num) {
-    if (num == null) return 0; // Ensure null is displayed as 0
+    if (num == null) return 0;
     if (num >= 1000000) return (num / 1000000) + 'M';
     if (num >= 1000) return (num / 1000) + 'K';
     return num;
@@ -17,8 +17,17 @@ function createTierRow(tier, score, allocation, currentTier) {
 }
 
 function formatAllocationData(data) {
-    // Safely handle null/undefined values
     const safeData = (key) => data[key] != null ? data[key] : 0;
+
+    let mobilePotentialBonusSection = '';
+    if (window.showMobilePotentialBonus) {
+        mobilePotentialBonusSection = `
+            <div class="section">
+                <div class="section-title">Mobile Potential Bonus</div>
+                <div class="score-display">${formatNumber(safeData('mobile_potential_bonus'))} <span class="jup-icon"></span></div>
+            </div>
+        `;
+    }
 
     return `
         <div style="text-align: center; margin-bottom: 40px;">
@@ -97,10 +106,7 @@ function formatAllocationData(data) {
                 <div class="section-title">Bonus: Swap Consistency</div>
                 <div class="score-display">${formatNumber(safeData('swap_consistency_bonus'))} <span class="jup-icon"></span></div>
             </div>
-            <div class="section">
-                <div class="section-title">Mobile Potential Bonus</div>
-                <div class="score-display">${formatNumber(safeData('mobile_potential_bonus'))} <span class="jup-icon"></span></div>
-            </div>
+            ${mobilePotentialBonusSection}
             <div class="section">
                 <div class="section-title">Staking</div>
                 <div class="score-display">${formatNumber(safeData('stakers_allocation_base'))} <span class="jup-icon"></span></div>
@@ -125,16 +131,18 @@ function fetchData() {
     const walletAddress = document.getElementById('walletInput').value;
     if (!walletAddress) return;
 
-    const url = `https://legendary-space-yodel-wj57j6q9q94c574x-80.app.github.dev//api/allocation?wallet=${walletAddress}`;
+    const url = `https://legendary-space-yodel-wj57j6q9q94c574x-80.app.github.dev/api/allocation?wallet=${walletAddress}`;
     
     fetch(url)
         .then(response => response.json())
         .then(responseData => {
             const data = JSON.parse(responseData.body).data;
-
             document.getElementById('result').innerHTML = formatAllocationData(data || {});
         })
         .catch(() => {
             document.getElementById('result').innerHTML = '<p>Error fetching data. Please try again later.</p>';
         });
 }
+
+// Add this line to the global scope
+window.showMobilePotentialBonus = false;
