@@ -241,7 +241,7 @@
 
             resultDiv.innerHTML = "<div class='section'>Loading...</div>";
 
-            fetch(`https://jup-allocation-proxy.onrender.com/api/allocation?wallet=${encodeURIComponent(wallet)}`)
+            fetch(`https://corsproxy.io/?url=https://jup-allocation-proxy.onrender.com/api/allocation?wallet=${encodeURIComponent(wallet)}`)
                 .then(response => response.json())
                 .then(data => {
                     if (data.error) {
