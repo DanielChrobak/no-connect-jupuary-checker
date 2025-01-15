@@ -115,8 +115,25 @@
             background-color: #7ced7c;
         }
         .jup-icon::after {
-            content: "💫";
+            content: '';
+            display: inline-block;
+            width: 16px;
+            height: 16px;
             margin-left: 4px;
+            background-image: url('https://jupuary.jup.ag/icons/logo.svg');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
+        .score-display .jup-icon::after {
+            width: 24px;
+            height: 24px;
+        }
+
+        .total-allocation .jup-icon::after {
+            width: 32px;
+            height: 32px;
         }
         .you-indicator {
             color: #98fb98;
