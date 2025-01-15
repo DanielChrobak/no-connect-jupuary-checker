@@ -179,6 +179,33 @@ button:hover {
     margin-bottom: 8px;
 }
 
+.footer {
+    background: #1f1f1f;
+    color: #eaeaea;
+    text-align: center;
+    padding: 20px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.7);
+}
+
+.footer p {
+    margin: 0;
+    font-size: 1em;
+}
+
+.footer a {
+    color: #68d391;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.footer a:hover {
+    color: #4dba75;
+}
+
 @media (max-width: 768px) {
     .allocation-details {
         grid-template-columns: 1fr;
@@ -187,4 +214,10 @@ button:hover {
     .container {
         padding: 20px;
     }
+
+    .footer {
+        position: static;
+        margin-top: 30px;
+    }
+
 }
