@@ -28,16 +28,19 @@ function fetchData() {
     let completed = 0;
 
     walletAddresses.forEach(walletAddress => {
-        const url = `https://legendary-space-yodel-wj57j6q9q94c574x-80.app.github.dev//api/allocation?wallet=${walletAddress}`;
+        const url = `https://jup-allocation-proxy.onrender.com/api/allocation?wallet=${walletAddress}`;
 
         fetch(url)
             .then(response => response.json())
             .then(responseData => {
-                const data = JSON.parse(responseData.body).data;
+                // Parse the response data safely
+                const parsedData = JSON.parse(responseData.body);
+                const data = parsedData.data;
+
                 const row = `
                     <tr>
                         <td>${walletAddress}</td>
-                        <td>${data.total_allocated || 'N/A'}</td>
+                        <td>${data?.total_allocated || '0'}</td>
                     </tr>
                 `;
                 tableBody.innerHTML += row;
@@ -46,7 +49,7 @@ function fetchData() {
                 const row = `
                     <tr>
                         <td>${walletAddress}</td>
-                        <td>Error fetching data</td>
+                        <td>None</td>
                     </tr>
                 `;
                 tableBody.innerHTML += row;
