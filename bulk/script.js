@@ -26,8 +26,9 @@ function fetchData() {
     fetchButton.disabled = true;
 
     let completed = 0;
+    const results = Array(walletAddresses.length).fill(null); // To store results in order
 
-    walletAddresses.forEach(walletAddress => {
+    walletAddresses.forEach((walletAddress, index) => {
         const url = `https://legendary-space-yodel-wj57j6q9q94c574x-80.app.github.dev//api/allocation?wallet=${walletAddress}`;
 
         fetch(url)
@@ -37,28 +38,28 @@ function fetchData() {
                 const parsedData = JSON.parse(responseData.body);
                 const data = parsedData.data;
 
-                const row = `
+                results[index] = `
                     <tr>
                         <td>${walletAddress}</td>
                         <td>${data?.total_allocated || '0'}</td>
                     </tr>
                 `;
-                tableBody.innerHTML += row;
             })
             .catch(() => {
-                const row = `
+                results[index] = `
                     <tr>
                         <td>${walletAddress}</td>
                         <td>None</td>
                     </tr>
                 `;
-                tableBody.innerHTML += row;
             })
             .finally(() => {
                 completed += 1;
                 status.textContent = `Fetching ${completed}/${walletAddresses.length} wallets...`;
 
                 if (completed === walletAddresses.length) {
+                    // Populate table after all requests complete
+                    tableBody.innerHTML = results.join('');
                     loading.classList.add('hidden');
                     fetchButton.disabled = false;
                     status.textContent = "All wallets fetched.";
