@@ -243,6 +243,28 @@
                         <div class="section-title">Mobile Potential Bonus</div>
                         <div class="score-display">${data.mobile_potential_bonus} <span class="jup-icon"></span></div>
                     </div>
+                    <div class="section">
+                        <div class="section-title">Staking</div>
+                        <div class="score-display">${data.stakers_allocation_base} <span class="jup-icon"></span></div>
+                        <div class="score-info">Time-weighted Stake: ${Math.round(data.stakers_score).toLocaleString()}</div>
+                        <div class="info-text">
+                            The staking base allocation is given according to your time-weighted stake if you have at least 10 JUP staked on 2 Nov 2024.
+                        </div>
+                    </div>
+                    <div class="section">
+                        <div class="section-title">Bonus: Super Voters</div>
+                        <div class="score-display">${data.stakers_super_voter_bonus} <span class="jup-icon"></span></div>
+                        <div class="info-text">
+                            Thank you for actively voting on proposals! We appreciate you.
+                        </div>
+                    </div>
+                    <div class="section">
+                        <div class="section-title">Bonus: Super Stakers</div>
+                        <div class="score-display">${data.stakers_super_staker_bonus} <span class="jup-icon"></span></div>
+                        <div class="info-text">
+                            Thank you for staking your JUP throughout the year. A real one!
+                        </div>
+                    </div>
                 </div>
             `;
         }
