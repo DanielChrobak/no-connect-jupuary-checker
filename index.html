@@ -129,15 +129,25 @@
         .score-display .jup-icon::after {
             width: 24px;
             height: 24px;
-        }
-
-        .total-allocation .jup-icon::after {
-            width: 32px;
-            height: 32px;
+            margin-top: 4px;
         }
         .you-indicator {
             color: #98fb98;
             margin-left: 8px;
+        }
+        .total-allocation {
+            text-align: center;
+            font-size: 3.5em;
+            color: #98fb98;
+            margin: 30px 0;
+            font-weight: 500;
+        }
+
+        .total-allocation .jup-icon::after {
+            width: 40px;
+            height: 40px;
+            vertical-align: middle;
+            margin-bottom: 8px;
         }
     </style>
 </head>
@@ -169,8 +179,14 @@
 
         function formatAllocationData(data) {
             return `
-                <div class="total-allocation">
-                    ${data.total_allocated} <span class="jup-icon"></span>
+                <div style="text-align: center; margin-bottom: 40px;">
+                    <div style="color: #ffffff; margin-bottom: 20px;">
+                        <br>
+                        <h2>Your total allocation is:</h2>
+                    </div>
+                    <div class="total-allocation" style="font-size: 3.5em; margin: 30px 0;">
+                        ${data.total_allocated} <span class="jup-icon"></span>
+                    </div>
                 </div>
                 <div class="allocation-details">
                     <div class="section">
