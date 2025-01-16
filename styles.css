@@ -1,150 +1,223 @@
-function formatNumber(num) {
-    if (num == null) return '0';
-    const formatted = num.toLocaleString('en-US', {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-    });
-    return formatted.endsWith('.00') ? formatted.slice(0, -3) : formatted;
+body {
+    font-family: 'Arial', sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 20px;
+    background-color: #121212;
+    color: #eaeaea;
 }
 
-function createTierRow(tier, score, allocation, currentTier) {
-    const isCurrentTier = tier === currentTier;
-    return `
-        <tr class="${isCurrentTier ? 'current-tier' : ''}">
-            <td>Tier ${tier}${isCurrentTier ? ' <span class="you-indicator">< You</span>' : ''}</td>
-            <td>${formatNumber(score)}</td>
-            <td>${formatNumber(allocation)} <span class="jup-icon"></span></td>
-        </tr>
-    `;
+.container {
+    max-width: 1200px;
+    margin: auto;
+    background: #1f1f1f;
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7);
 }
 
-function formatAllocationData(data) {
-    const safeData = (key) => data[key] != null ? data[key] : 0;
+h1 {
+    color: #eaeaea;
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 2.5em;
+    letter-spacing: 1px;
+}
 
-    let mobilePotentialBonusSection = '';
-    if (window.showMobilePotentialBonus) {
-        mobilePotentialBonusSection = `
-            <div class="section">
-                <div class="section-title">Mobile Potential Bonus</div>
-                <div class="score-display">${formatNumber(safeData('mobile_potential_bonus'))} <span class="jup-icon"></span></div>
-            </div>
-        `;
+.total-allocation {
+    text-align: center;
+    font-size: 3.5em;
+    color: #68d391;
+    margin: 20px 0;
+    font-weight: 500;
+}
+
+.allocation-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    margin-top: 30px;
+}
+
+.section {
+    background: #292929;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    transition: transform 0.3s ease;
+}
+
+.section:hover {
+    transform: translateY(-5px);
+}
+
+.section-title {
+    color: #f3f3f3;
+    font-size: 1.4em;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+}
+
+.score-display {
+    color: #68d391;
+    font-size: 2.2em;
+    margin: 15px 0;
+}
+
+.score-info {
+    color: #eaeaea;
+    margin: 10px 0;
+    font-size: 1em;
+}
+
+.tier-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-top: 20px;
+    background: #1f1f1f;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.tier-table th {
+    background: #2b2b2b;
+    padding: 12px;
+    text-align: left;
+    color: #ffffff;
+    font-weight: normal;
+    letter-spacing: 0.5px;
+}
+
+.tier-table td {
+    padding: 12px;
+    border-top: 1px solid #2b2b2b;
+}
+
+.tier-table tr.current-tier {
+    color: #68d391;
+    font-weight: bold;
+}
+
+.tier-table tr:hover {
+    background: #333333;
+}
+
+.info-text {
+    color: #a1a1a1;
+    font-size: 0.9em;
+    margin-top: 20px;
+    line-height: 1.8;
+}
+
+input[type="text"] {
+    width: 100%;
+    padding: 15px;
+    margin-bottom: 15px;
+    background: #2b2b2b;
+    border: none;
+    border-radius: 8px;
+    color: #eaeaea;
+    font-size: 1em;
+    outline: none;
+    box-sizing: border-box;
+}
+
+input[type="text"]::placeholder {
+    color: #888888;
+}
+
+input[type="text"]:focus {
+    background: #333333;
+    box-shadow: 0 0 0 2px #68d391;
+}
+
+button {
+    width: 100%;
+    padding: 15px;
+    background-color: #68d391;
+    color: #1f1f1f;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1em;
+    transition: background-color 0.2s ease;
+}
+
+button:hover {
+    background-color: #4dba75;
+}
+
+.jup-icon::after {
+    content: '';
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    margin-left: 4px;
+    background-image: url('https://jupuary.jup.ag/icons/logo.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.score-display .jup-icon::after {
+    width: 24px;
+    height: 24px;
+    margin-top: 4px;
+}
+
+.you-indicator {
+    color: #68d391;
+    margin-left: 8px;
+}
+
+.total-allocation .jup-icon::after {
+    width: 40px;
+    height: 40px;
+    vertical-align: middle;
+    margin-bottom: 8px;
+}
+
+.footer {
+    background: #1f1f1f;
+    color: #eaeaea;
+    text-align: center;
+    padding: 20px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.7);
+}
+
+.footer p {
+    margin: 0;
+    font-size: 1em;
+}
+
+.footer a {
+    color: #68d391;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.footer a:hover {
+    color: #4dba75;
+}
+
+@media (max-width: 768px) {
+    .allocation-details {
+        grid-template-columns: 1fr;
     }
 
-    return `
-        <div style="text-align: center; margin-bottom: 40px;">
-            <div style="color: #ffffff; margin-bottom: 20px;">
-                <br>
-                <h2>Your total allocation is:</h2>
-            </div>
-            <div class="total-allocation" style="font-size: 3.5em; margin: 30px 0;">
-                ${formatNumber(safeData('total_allocated'))} <span class="jup-icon"></span>
-            </div>
-        </div>
-        <div class="allocation-details">
-            <div class="section">
-                <div class="section-title">Swap</div>
-                <div class="score-display">${formatNumber(safeData('swap_allocation_base'))} <span class="jup-icon"></span></div>
-                <div class="score-info">Score: ${formatNumber(safeData('swap_score'))}</div>
-                <div class="score-info">Tier: ${safeData('swap_tier')}</div>
-                <table class="tier-table">
-                    <thead>
-                        <tr>
-                            <th>Tier</th>
-                            <th>Qualifying Score</th>
-                            <th>Allocation</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${createTierRow(1, 10000000, 20000, safeData('swap_tier'))}
-                        ${createTierRow(2, 5000000, 12000, safeData('swap_tier'))}
-                        ${createTierRow(3, 1000000, 5000, safeData('swap_tier'))}
-                        ${createTierRow(4, 500000, 2500, safeData('swap_tier'))}
-                        ${createTierRow(5, 100000, 1000, safeData('swap_tier'))}
-                        ${createTierRow(6, 10000, 200, safeData('swap_tier'))}
-                        ${createTierRow(7, 1000, 50, safeData('swap_tier'))}
-                        ${createTierRow(8, 500, 25, safeData('swap_tier'))}
-                    </tbody>
-                </table>
-                <div class="info-text">
-                    • Your swap score is based on adjusted USD volume and your scoring relative to other users determines your allocation.<br>
-                    • Qualifying transactions must be made from 2 Nov 23 - 1 Nov 24<br>
-                    • We removed bots, wallets that were trading mostly illiquid pairs, wallets that have traded for less than 3 weeks, and sybils<br>
-                    • Circular transactions, swaps <= 5 USD, and swaps on extremely illiquid tokens without reliable pricing data do not contribute to your score<br>
-                    • The volume of stable-stable swaps and sol-sol swaps are heavily discounted in your score.
-                </div>
-            </div>
-            <div class="section">
-                <div class="section-title">Expert</div>
-                <div class="score-display">${formatNumber(safeData('expert_allocation'))} <span class="jup-icon"></span></div>
-                <div class="score-info">Score: ${formatNumber(safeData('expert_score'))}</div>
-                <div class="score-info">Tier: ${safeData('expert_tier')}</div>
-                <table class="tier-table">
-                    <thead>
-                        <tr>
-                            <th>Tier</th>
-                            <th>Qualifying Score</th>
-                            <th>Allocation</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${createTierRow(1, 150000, 300000, safeData('expert_tier'))}
-                        ${createTierRow(2, 100000, 200000, safeData('expert_tier'))}
-                        ${createTierRow(3, 50000, 100000, safeData('expert_tier'))}
-                        ${createTierRow(4, 25000, 50000, safeData('expert_tier'))}
-                        ${createTierRow(5, 10000, 20000, safeData('expert_tier'))}
-                        ${createTierRow(6, 5000, 10000, safeData('expert_tier'))}
-                        ${createTierRow(7, 1000, 2000, safeData('expert_tier'))}
-                        ${createTierRow(8, 100, 200, safeData('expert_tier'))}
-                        ${createTierRow(9, 10, 50, safeData('expert_tier'))}
-                        ${createTierRow(10, 1, 20, safeData('expert_tier'))}
-                    </tbody>
-                </table>
-                <div class="info-text">
-                    Your expert score is based on usage of DCA, LO, Ape and Perpetuals.
-                </div>
-            </div>
-            <div class="section">
-                <div class="section-title">Bonus: Swap Consistency</div>
-                <div class="score-display">${formatNumber(safeData('swap_consistency_bonus'))} <span class="jup-icon"></span></div>
-            </div>
-            ${mobilePotentialBonusSection}
-            <div class="section">
-                <div class="section-title">Staking</div>
-                <div class="score-display">${formatNumber(safeData('stakers_allocation_base'))} <span class="jup-icon"></span></div>
-                <div class="score-info">Time-weighted Stake: ${formatNumber(safeData('stakers_score'))}</div>
-                <div class="info-text">
-                    The staking base allocation is given according to your time-weighted stake if you have at least 10 JUP staked on 2 Nov 2024.
-                </div>
-            </div>
-            <div class="section">
-                <div class="section-title">Bonus: Super Voters</div>
-                <div class="score-display">${formatNumber(safeData('stakers_super_voter_bonus'))} <span class="jup-icon"></span></div>
-            </div>
-            <div class="section">
-                <div class="section-title">Bonus: Super Stakers</div>
-                <div class="score-display">${formatNumber(safeData('stakers_super_staker_bonus'))} <span class="jup-icon"></span></div>
-            </div>
-        </div>
-    `;
+    .container {
+        padding: 20px;
+    }
+
+    .footer {
+        position: static;
+        margin-top: 30px;
+    }
+
 }
-
-function fetchData() {
-    const walletAddress = document.getElementById('walletInput').value;
-    if (!walletAddress) return;
-
-    const url = `https://jupuary.danielchrobak.tech/api/allocation?wallet=${walletAddress}`;
-    
-    fetch(url)
-        .then(response => response.json())
-        .then(responseData => {
-            const data = JSON.parse(responseData.body).data;
-            document.getElementById('result').innerHTML = formatAllocationData(data || {});
-        })
-        .catch(() => {
-            document.getElementById('result').innerHTML = '<p>Error fetching data. Please try again later.</p>';
-        });
-}
-
-// Add this line to the global scope
-window.showMobilePotentialBonus = false;
