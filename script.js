@@ -133,7 +133,7 @@ function fetchData() {
     const walletAddress = document.getElementById('walletInput').value;
     if (!walletAddress) return;
 
-    const url = `https://jupuary.danielchrobak.tech/api/allocation?wallet=${walletAddress}`;
+    const url = `https://jup-allocation-proxy.onrender.com/api/allocation?wallet=${walletAddress}`;
     
     fetch(url)
         .then(response => response.json())
