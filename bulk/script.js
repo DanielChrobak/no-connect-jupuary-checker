@@ -1,4 +1,4 @@
-function fetchData() {
+async function fetchData() {
     const walletInput = document.getElementById('walletInput').value;
     const fetchButton = document.getElementById('fetchButton');
     const status = document.getElementById('status');
@@ -20,50 +20,63 @@ function fetchData() {
         return;
     }
 
-    tableBody.innerHTML = ''; // Clear previous results
-    status.textContent = `Fetching 0/${walletAddresses.length} wallets...`;
+    tableBody.innerHTML = '';
     loading.classList.remove('hidden');
     fetchButton.disabled = true;
 
-    let completed = 0;
-    const results = Array(walletAddresses.length).fill(null); // To store results in order
+    const maxRetries = 5;
+    let baseDelay = 1000; // 1 second
+    const maxBaseDelay = 10000; // 10 seconds
 
-    walletAddresses.forEach((walletAddress, index) => {
-        const url = `https://jupuary.danielchrobak.tech/api/allocation?wallet=${walletAddress}`;
+    for (let i = 0; i < walletAddresses.length; i++) {
+        const walletAddress = walletAddresses[i];
+        status.textContent = `Fetching ${i + 1}/${walletAddresses.length} wallets...`;
 
-        fetch(url)
-            .then(response => response.json())
-            .then(responseData => {
-                // Parse the response data safely
+        let retries = 0;
+        while (retries <= maxRetries) {
+            try {
+                const url = `https://jupuary.danielchrobak.tech/api/allocation?wallet=${walletAddress}`;
+                const response = await fetch(url);
+                const responseData = await response.json();
+
+                if (responseData.status_code === 429) {
+                    baseDelay = Math.min(baseDelay * 2, maxBaseDelay);
+                    const delay = Math.pow(2, retries) * baseDelay;
+                    status.textContent = `Rate limited. Retrying in ${delay / 1000} seconds...`;
+                    await new Promise(resolve => setTimeout(resolve, delay));
+                    retries++;
+                    continue;
+                }
+
                 const parsedData = JSON.parse(responseData.body);
                 const data = parsedData.data;
 
-                results[index] = `
-                    <tr>
-                        <td>${walletAddress}</td>
-                        <td>${data?.total_allocated || '0'}</td>
-                    </tr>
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${walletAddress}</td>
+                    <td>${data?.total_allocated || '0'}</td>
                 `;
-            })
-            .catch(() => {
-                results[index] = `
-                    <tr>
+                tableBody.appendChild(row);
+                break;
+            } catch (error) {
+                if (retries === maxRetries) {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
                         <td>${walletAddress}</td>
-                        <td>None</td>
-                    </tr>
-                `;
-            })
-            .finally(() => {
-                completed += 1;
-                status.textContent = `Fetching ${completed}/${walletAddresses.length} wallets...`;
-
-                if (completed === walletAddresses.length) {
-                    // Populate table after all requests complete
-                    tableBody.innerHTML = results.join('');
-                    loading.classList.add('hidden');
-                    fetchButton.disabled = false;
-                    status.textContent = "All wallets fetched.";
+                        <td>Error: ${error.message}</td>
+                    `;
+                    tableBody.appendChild(row);
+                } else {
+                    const delay = Math.pow(2, retries) * baseDelay;
+                    status.textContent = `Error occurred. Retrying in ${delay / 1000} seconds...`;
+                    await new Promise(resolve => setTimeout(resolve, delay));
+                    retries++;
                 }
-            });
-    });
+            }
+        }
+    }
+
+    loading.classList.add('hidden');
+    fetchButton.disabled = false;
+    status.textContent = "All wallets fetched.";
 }
