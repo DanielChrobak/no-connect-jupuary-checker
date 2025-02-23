@@ -35,7 +35,7 @@ async function fetchData() {
         let retries = 0;
         while (retries <= maxRetries) {
             try {
-                const url = `https://jupuary.danielchrobak.tech/api/allocation?wallet=${walletAddress}`;
+                const url = `https://jup-allocation-proxy.onrender.com/api/allocation?wallet=${walletAddress}`;
                 const response = await fetch(url);
                 const responseData = await response.json();
 
@@ -73,6 +73,12 @@ async function fetchData() {
                     retries++;
                 }
             }
+        }
+
+        // Add a 1-second delay between requests
+        if (i < walletAddresses.length - 1) {
+            status.textContent = `Waiting 1 second before next request...`;
+            await new Promise(resolve => setTimeout(resolve, 1000));
         }
     }
 
