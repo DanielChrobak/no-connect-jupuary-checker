@@ -75,10 +75,10 @@ async function fetchData() {
             }
         }
 
-        // Add a 1-second delay between requests
+        // Add a 1/2-second delay between requests
         if (i < walletAddresses.length - 1) {
-            status.textContent = `Waiting 1 second before next request...`;
-            await new Promise(resolve => setTimeout(resolve, 1000));
+            status.textContent = `Waiting 1/2 second before next request...`;
+            await new Promise(resolve => setTimeout(resolve, 500));
         }
     }
 
