@@ -1,3 +1,5 @@
+let allResponses = [];
+
 async function fetchData() {
     const walletInput = document.getElementById('walletInput').value;
     const fetchButton = document.getElementById('fetchButton');
@@ -23,10 +25,11 @@ async function fetchData() {
     tableBody.innerHTML = '';
     loading.classList.remove('hidden');
     fetchButton.disabled = true;
+    allResponses = [];
 
     const maxRetries = 5;
-    let baseDelay = 1000; // 1 second
-    const maxBaseDelay = 10000; // 10 seconds
+    let baseDelay = 1000;
+    const maxBaseDelay = 10000;
 
     for (let i = 0; i < walletAddresses.length; i++) {
         const walletAddress = walletAddresses[i];
@@ -50,6 +53,8 @@ async function fetchData() {
 
                 const parsedData = JSON.parse(responseData.body);
                 const data = parsedData.data;
+
+                allResponses.push({ wallet: walletAddress, response: data });
 
                 const row = document.createElement('tr');
                 row.innerHTML = `
@@ -75,7 +80,6 @@ async function fetchData() {
             }
         }
 
-        // Add a 1/2-second delay between requests
         if (i < walletAddresses.length - 1) {
             status.textContent = `Waiting 1/2 second before next request...`;
             await new Promise(resolve => setTimeout(resolve, 500));
@@ -85,4 +89,26 @@ async function fetchData() {
     loading.classList.add('hidden');
     fetchButton.disabled = false;
     status.textContent = "All wallets fetched.";
+    addDownloadButton();
+}
+
+function addDownloadButton() {
+    let downloadButton = document.getElementById('downloadButton');
+    if (!downloadButton) {
+        downloadButton = document.createElement('button');
+        downloadButton.id = 'downloadButton';
+        downloadButton.textContent = 'Download All Responses';
+        downloadButton.onclick = downloadResponses;
+        document.querySelector('.container').appendChild(downloadButton);
+    }
+}
+
+function downloadResponses() {
+    const blob = new Blob([JSON.stringify(allResponses, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'wallet_responses.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
 }
